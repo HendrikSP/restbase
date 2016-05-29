@@ -13,6 +13,8 @@ RUN chmod 777 /db
 
 ADD ./config.yaml /restbase/
 ADD ./wikitolearn.yaml /restbase/projects/
+ADD ./mathoid.yaml /restbase/v1/mathoid.yaml
+
 
 ADD ./kickstart.sh /
 RUN chmod +x /kickstart.sh
