@@ -14,6 +14,7 @@ RUN chmod 777 /db
 ADD ./config.yaml /restbase/
 ADD ./wikitolearn.yaml /restbase/projects/
 ADD ./mathoid.yaml /restbase/v1/mathoid.yaml
+ADD ./mathoid.js /restbase/sys/mathoid.js
 
 
 ADD ./kickstart.sh /

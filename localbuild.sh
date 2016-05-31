@@ -1,2 +1,2 @@
 #!/bin/bash
-docker build -t wikitolearn/restbase:0.1.5.2 .
+docker build -t wikitolearn/restbase:0.1.5.3 .
