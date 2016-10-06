@@ -1,7 +1,8 @@
 FROM node:5
-ADD /src/docker-npm-install.sh /docker-npm-install.sh
+ADD ./docker-npm-install.sh /docker-npm-install.sh
 
-RUN git clone https://github.com/wikimedia/restbase.git && cd restbase && git checkout v0.15.2 && rm -Rfv .git/
+ADD ./sources.list /etc/apt/sources.list
+RUN git clone https://github.com/wikimedia/restbase.git && cd restbase && git checkout v0.14.4 && rm -Rfv .git/
 
 WORKDIR restbase
 
@@ -12,10 +13,11 @@ EXPOSE 7231
 RUN mkdir /db
 RUN chmod 777 /db
 
-ADD ./src/restbase/sys/mathoid.js /restbase/sys/
-ADD ./src/restbase/v1/mathoid.yaml /restbase/v1/
-ADD ./src/restbase/projects/wikitolearn.yaml /restbase/projects/
+ADD ./wikitolearn.yaml /restbase/projects/
+ADD ./mathoid.yaml /restbase/v1/mathoid.yaml
+ADD ./mathoid.js /restbase/sys/mathoid.js
 
-ADD ./src/make-config-yaml.sh /
-ADD ./src/docker-entrypoint.sh /
-ENTRYPOINT /docker-entrypoint.sh
+
+ADD ./kickstart.sh /
+RUN chmod +x /kickstart.sh
+CMD /kickstart.sh

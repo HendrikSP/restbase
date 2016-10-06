@@ -1,7 +1,7 @@
 # Mathoid - math formula rendering service
-tags:
-  - name: Math
-    description: formula rendering
+
+swagger: 2.0
+
 paths:
   /math/check/{type}:
     post:
@@ -50,7 +50,7 @@ paths:
         - title: Mathoid - check test formula
           request:
             params:
-              domain: pool.WTL_DOMAIN_NAME
+              domain: wikimedia.org
               type: tex
             body:
               q: E=mc^{2}
@@ -67,45 +67,9 @@ paths:
         - get_from_sys:
             request:
               method: post
-              uri: /pool.WTL_DOMAIN_NAME/sys/mathoid/check/{type}
+              uri: /wikimedia.org/sys/mathoid/check/{type}
               headers: '{{ request.headers }}'
               body: '{{ request.body }}'
-
-  /math/formula/{hash}:
-    get:
-      tags: ['Math']
-      summary: Get a previously-stored formula
-      description: |
-        Returns the previously-stored formula via `/media/math/check/{type}` for
-        the given hash.
-
-        Stability: [unstable](https://www.mediawiki.org/wiki/API_versioning#unstable).
-      produces:
-        - application/json
-      parameters:
-        - name: hash
-          in: path
-          description: The hash string of the previous POST data
-          type: string
-          required: true
-      responses:
-        '200':
-          description: Information about the checked formula
-        '404':
-          description: Data for the given hash cannot be found
-          schema:
-            $ref: '#/definitions/problem'
-        default:
-          description: Error
-          schema:
-            $ref: '#/definitions/problem'
-      x-monitor: false
-      x-request-handler:
-        - get_from_sys:
-            request:
-              method: get
-              uri: /pool.WTL_DOMAIN_NAME/sys/mathoid/formula/{hash}
-              headers: '{{ request.headers }}'
 
   /math/render/{format}/{hash}:
     get:
@@ -150,12 +114,12 @@ paths:
       x-monitor: false
       x-setup-handler:
         - init_svg:
-            uri: /pool.WTL_DOMAIN_NAME/sys/key_value/mathoid.svg
+            uri: /wikimedia.org/sys/key_value/mathoid.svg
             body:
               keyType: string
               valueType: string
         - init_mml:
-            uri: /pool.WTL_DOMAIN_NAME/sys/key_value/mathoid.mml
+            uri: /wikimedia.org/sys/key_value/mathoid.mml
             body:
               keyType: string
               valueType: string
@@ -163,7 +127,7 @@ paths:
         - check_storage:
             request:
               method: get
-              uri: /pool.WTL_DOMAIN_NAME/sys/key_value/mathoid.{$.request.params.format}/{$.request.params.hash}
+              uri: /wikimedia.org/sys/key_value/mathoid.{$.request.params.format}/{$.request.params.hash}
               headers:
                 cache-control: '{{ cache-control }}'
             catch:
@@ -176,11 +140,11 @@ paths:
               body: '{{ check_storage.body }}'
         - postdata:
             request:
-              uri: /pool.WTL_DOMAIN_NAME/sys/mathoid/formula/{request.params.hash}
+              uri: /wikimedia.org/sys/post_data/mathoid.input/{$.request.params.hash}
         - mathoid:
             request:
               method: post
-              uri: /pool.WTL_DOMAIN_NAME/sys/mathoid/render/{request.params.format}
+              uri: /wikimedia.org/sys/mathoid/render/{request.params.format}
               headers:
                 content-type: application/json
                 x-resource-location: '{{ request.params.hash }}'
