@@ -4,7 +4,7 @@ ADD ./docker-npm-install.sh /docker-npm-install.sh
 ADD ./sources.list /etc/apt/sources.list
 WORKDIR /opt
 
-RUN git clone https://github.com/wikimedia/restbase.git . && git checkout v0.14.4 && rm -Rfv .git/
+RUN git clone https://github.com/wikimedia/restbase.git . && git checkout v0.16.2 && rm -Rfv .git/
 
 RUN /docker-npm-install.sh
 
